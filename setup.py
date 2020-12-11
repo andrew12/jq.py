@@ -7,6 +7,7 @@ import sysconfig
 import tarfile
 
 import requests
+from Cython.Build import cythonize
 from setuptools import setup
 from setuptools.command.build_ext import build_ext
 from setuptools.extension import Extension
@@ -102,7 +103,7 @@ class jq_build_ext(build_ext):
 
 jq_extension = Extension(
     "jq",
-    sources=["jq.c"],
+    sources=["jq.pyx"],
     include_dirs=[os.path.join(jq_lib_dir, "src")],
     extra_link_args=["-lm"],
     extra_objects=[
@@ -120,7 +121,7 @@ setup(
     url='http://github.com/mwilliamson/jq.py',
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     license='BSD 2-Clause',
-    ext_modules = [jq_extension],
+    ext_modules = cythonize([jq_extension]),
     cmdclass={"build_ext": jq_build_ext},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
