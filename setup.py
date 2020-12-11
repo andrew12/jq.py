@@ -66,7 +66,6 @@ class jq_build_ext(build_ext):
             tarball_path=jq_lib_tarball_path,
             lib_dir=jq_lib_dir,
             commands=[
-                ["autoreconf", "-i"],
                 ["bash", "./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode", "--with-oniguruma=" + oniguruma_lib_install_dir],
                 ["make"],
             ])
