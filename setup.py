@@ -44,7 +44,7 @@ class jq_build_ext(build_ext):
     def run(self):
         if not os.path.exists(dependency_path(".")):
             os.makedirs(dependency_path("."))
-        # self._build_oniguruma()
+        self._build_oniguruma()
         self._build_libjq()
         build_ext.run(self)
 
@@ -66,7 +66,7 @@ class jq_build_ext(build_ext):
             tarball_path=jq_lib_tarball_path,
             lib_dir=jq_lib_dir,
             commands=[
-                ["bash", "./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode", "--with-oniguruma=builtin"],
+                ["bash", "./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode", "--with-oniguruma=" + oniguruma_lib_install_dir],
                 ["make"],
             ])
 
