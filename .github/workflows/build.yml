@@ -4,7 +4,10 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -18,7 +21,7 @@ jobs:
         env:
           CIBW_TEST_REQUIRES: "-r test-requirements.txt"
           CIBW_TEST_COMMAND: "nosetests {project}/tests"
-          CIBW_SKIP: "cp27-*"
+          CIBW_SKIP: "cp27-* cp35-*"
         run: python -m cibuildwheel --output-dir wheelhouse
       - uses: actions/upload-artifact@v2
         with:

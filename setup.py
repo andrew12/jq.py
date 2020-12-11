@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-import shlex
 import shutil
 import subprocess
 import sysconfig
@@ -55,7 +54,7 @@ class jq_build_ext(build_ext):
             tarball_path=oniguruma_lib_tarball_path,
             lib_dir=oniguruma_lib_build_dir,
             commands=[
-                ["./configure", "CFLAGS=-fPIC", "--prefix=" + oniguruma_lib_install_dir],
+                ["bash", "./configure", "CFLAGS=-fPIC", "--prefix=" + oniguruma_lib_install_dir],
                 ["make"],
                 ["make", "install"],
             ])
@@ -68,7 +67,7 @@ class jq_build_ext(build_ext):
             lib_dir=jq_lib_dir,
             commands=[
                 ["autoreconf", "-i"],
-                ["./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode", "--with-oniguruma=" + oniguruma_lib_install_dir],
+                ["bash", "./configure", "CFLAGS=-fPIC", "--disable-maintainer-mode", "--with-oniguruma=" + oniguruma_lib_install_dir],
                 ["make"],
             ])
 
@@ -84,10 +83,8 @@ class jq_build_ext(build_ext):
             os.environ['MACOSX_DEPLOYMENT_TARGET'] = macosx_deployment_target
 
         def run_command(args):
-            args = " ".join(shlex.quote(x) for x in args)
-            print("Executing: %s" % args)
-
-            subprocess.check_call(["bash", "-exc", args], cwd=lib_dir)
+            print("Executing: %s" % ' '.join(args))
+            subprocess.check_call(args, cwd=lib_dir)
 
         for command in commands:
             run_command(command)
