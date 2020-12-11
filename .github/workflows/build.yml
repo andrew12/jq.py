@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -23,8 +23,8 @@ jobs:
       - name: Install macOS build dependencies
         if: runner.os == 'macOS'
         run: brew install automake
-      - name: Build libjq
-        run: bash -ex build.sh
+      # - name: Build libjq
+      #   run: bash -ex build.sh
       - name: Build wheels
         env:
           CIBW_TEST_REQUIRES: "-r test-requirements.txt"
