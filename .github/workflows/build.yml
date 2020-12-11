@@ -9,13 +9,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: Build jq
-        if: runner.os != 'Windows'
-        run: |-
-          cd jq
-          autoreconf -i
-          ./configure CFLAGS=-fPIC --disable-maintainer-mode --with-oniguruma=builtin
-          make
       - uses: actions/setup-python@v2
         with:
           python-version: "3.7"
@@ -25,7 +18,6 @@ jobs:
         env:
           CIBW_TEST_REQUIRES: "-r test-requirements.txt"
           CIBW_TEST_COMMAND: "nosetests {project}/tests"
-          CIBW_SKIP: "cp27-*"
         run: python -m cibuildwheel --output-dir wheelhouse
       - uses: actions/upload-artifact@v2
         with:
