@@ -18,7 +18,7 @@ jobs:
         env:
           CIBW_TEST_REQUIRES: "-r test-requirements.txt"
           CIBW_TEST_COMMAND: "nosetests {project}/tests"
-          CIBW_SKIP: "py27-* py34-*"
+          CIBW_SKIP: "cp27-*"
         run: python -m cibuildwheel --output-dir wheelhouse
       - uses: actions/upload-artifact@v2
         with:
