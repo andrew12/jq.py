@@ -26,6 +26,9 @@ jobs:
       - name: Build libjq
         run: bash -ex build.sh
       - name: Build wheels
+        env:
+          CIBW_TEST_REQUIRES: "-r test-requirements.txt"
+          CIBW_TEST_COMMAND: "nosetests {project}/tests"
         run: python -m cibuildwheel --output-dir wheelhouse
       - uses: actions/upload-artifact@v2
         with:
