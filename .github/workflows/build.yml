@@ -3,17 +3,27 @@ name: Build
 on: [push, pull_request]
 
 jobs:
-  build_wheels:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+  build:
     strategy:
       matrix:
-        os: [windows-latest]
-
+        include:
+          - os: windows-latest
+            msystem: MINGW64
+            arch: x86_64
+            shell: msys2 {0}
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.msystem }}
+          install: git base-devel mingw-w64-${{ matrix.arch }}-toolchain
+          update: true
+      - name: Build jq
+        shell: ${{ matrix.shell }}
+        run: ./build.sh
       - uses: actions/setup-python@v2
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel
@@ -23,8 +33,6 @@ jobs:
       - name: Install macOS build dependencies
         if: runner.os == 'macOS'
         run: brew install automake
-      # - name: Build libjq
-      #   run: bash -ex build.sh
       - name: Build wheels
         env:
           CIBW_TEST_REQUIRES: "-r test-requirements.txt"
