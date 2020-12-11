@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import shlex
 import shutil
 import subprocess
 import sysconfig
@@ -83,8 +84,10 @@ class jq_build_ext(build_ext):
             os.environ['MACOSX_DEPLOYMENT_TARGET'] = macosx_deployment_target
 
         def run_command(args):
-            print("Executing: %s" % ' '.join(args))
-            subprocess.check_call(args, cwd=lib_dir)
+            args = " ".join(shlex.quote(x) for x in args)
+            print("Executing: %s" % args)
+
+            subprocess.check_call(["bash", "-exc", args], cwd=lib_dir)
 
         for command in commands:
             run_command(command)
